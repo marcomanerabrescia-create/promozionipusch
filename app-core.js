@@ -900,30 +900,36 @@
         }
 
         // Impedisce chiusura modale attivazione se non c'è codice
-        function preventCloseIfNoCode(event) {
-            // Se clicca fuori dal contenuto (sullo sfondo), controlla se c'è codice
-            if (event.target.id === 'activation-modal') {
-                // Solo in app installata: impedisci chiusura se non attivata
-                if (IS_STANDALONE) {
-                    let codice = storage.getItem('activationCode');
-                    let telefono = storage.getItem('activationPhone');
-                    
-                    // Fallback senza prefisso
-                    if (!codice || !telefono) {
-                        codice = localStorage.getItem('activationCode');
-                        telefono = localStorage.getItem('activationPhone');
-                    }
-                    
-                    // Se non c'è codice, NON chiudere il modale (BLOCCO OBBLIGATORIO)
-                    if (!codice || !telefono) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        console.log('🚫 Modal attivazione NON chiudibile - App non attivata');
-                        return false;
-                    }
+        function preventCloseIfNoCode(modalEl) {
+        const activationCode = localStorage.getItem('activationCode');
+        const isMissing = !activationCode || String(activationCode).trim() === '';
+        if (!modalEl) return !isMissing;
+
+        if (isMissing) {
+            // Blocca click fuori e qualsiasi pulsante di chiusura
+            modalEl.setAttribute('data-lock-close', '1');
+            modalEl.addEventListener('click', function(e) {
+                if (e.target === modalEl) {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
-            }
+            }, true);
+
+            const closeBtns = modalEl.querySelectorAll('[data-close], .close, .close-btn, .modal-close, #closeActivation, #closeActivationBtn');
+            closeBtns.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, true);
+            });
+            return false;
         }
+
+        // Se il codice c'e', permette la chiusura
+        modalEl.removeAttribute('data-lock-close');
+        return true;
+    }
+
         
         // ===== Modale messaggi cliente =====
         function openMessageModal() {
@@ -1514,7 +1520,6 @@ calendarContainer.style.width = '';
         }
 
         async function addAppointment() {
-            await ensurePushSubscription();
             // Blocca se non installata (muletto/browser)
             if (IS_MULETTO && !FORCE_BROWSER_MODE) {
                 showCustomAlert('⚠️ INSTALLA PRIMA L\'APP!\n\nQuesta funzione è disponibile solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
@@ -1537,6 +1542,11 @@ calendarContainer.style.width = '';
                     activationCode = localStorage.getItem('activationCode') || storage.getItem('activationCode') || '';
                 }
             } catch (_) {}
+            if (!activationCode || String(activationCode).trim() === '') {
+                showCustomAlert('⚠️ Per ricevere promozioni e tutti i vantaggi devi prima inserire il codice di attivazione dal pulsante ISTRUZIONI UTILIZZO', 'error');
+                return;
+            }
+
             try {
                 await refreshGlobalAppointments();
                 
@@ -1714,16 +1724,8 @@ calendarContainer.style.width = '';
         // =====================
         // Modale Info/Install
         // =====================
-        let deferredInstallPrompt = null;
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isInStandaloneMode = window.navigator.standalone === true;
-
-        // Intercetta beforeinstallprompt (Android/Chrome)
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredInstallPrompt = e;
-            updateInstallButtonState(); // Aggiorna stato pulsante quando disponibile
-        });
 
         // Salva installedAt su iOS al primo avvio standalone
         if (isIOS && isInStandaloneMode) {
@@ -1798,29 +1800,11 @@ calendarContainer.style.width = '';
             if (!btn && !voiceBtn) return;
         const privacyChk = document.getElementById('privacyAccept');
         const accepted = (privacyChk && privacyChk.checked) || getPrivacyAccepted();
-            
-            // Se già installata, disabilita pulsante principale
-            if (IS_STANDALONE) {
-                if (btn) {
-                    btn.disabled = true;
-                    btn.textContent = '✅ App già installata';
-                }
-                if (voiceBtn) {
-                    voiceBtn.disabled = !VOICE_APK_URL;
-                }
-                return;
+
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'NEUTRO';
             }
-            
-            // Se iOS, mostra istruzioni invece di pulsante normale
-            if (isIOS && !isInStandaloneMode) {
-                if (btn) btn.textContent = '📱 Mostra istruzioni iOS';
-            } else if (deferredInstallPrompt) {
-                if (btn) btn.textContent = '📥 Installa applicazione';
-            } else {
-                if (btn) btn.textContent = 'Installa applicazione';
-            }
-            
-            if (btn) btn.disabled = !accepted;
 
             if (voiceBtn) {
                 if (accepted && VOICE_APK_URL) {
@@ -1886,35 +1870,6 @@ calendarContainer.style.width = '';
             const h = Math.floor(minutes / 60);
             const m = minutes % 60;
             return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-        }
-
-        async function handleInstallClick() {
-        const privacyChk = document.getElementById('privacyAccept');
-        const accepted = (privacyChk && privacyChk.checked) || getPrivacyAccepted();
-            if (!accepted) return;
-            
-            // iOS: mostra istruzioni
-            if (isIOS && !isInStandaloneMode) {
-                showIOSInstallInstructions();
-                return;
-            }
-            
-            // Android/Chrome: usa deferredPrompt
-            if (deferredInstallPrompt) {
-                deferredInstallPrompt.prompt();
-                try {
-                    const choiceResult = await deferredInstallPrompt.userChoice;
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('✅ Utente ha accettato l\'installazione');
-                    }
-                } finally {
-                    deferredInstallPrompt = null;
-                    updateInstallButtonState();
-                }
-            } else {
-                // Se non c'è il prompt, mostra comunque istruzioni
-                showIOSInstallInstructions();
-            }
         }
 
         function handleInstallVoiceClick() {
