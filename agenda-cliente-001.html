@@ -1489,6 +1489,14 @@
 <!-- Push gestite solo via VAPID (SDK push terzi rimosso) -->
 </head>
 <body>
+<div id="activation-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#fff; z-index:99999; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px;">
+  <h2> App non attivata</h2>
+  <p>Inserisci il codice di attivazione e il tuo numero di telefono per accedere a tutti i vantaggi offerti. L'applicazione è gratuita!</p>
+  <button onclick="document.getElementById('activation-overlay').style.display='none'; document.getElementById('activation-section')?.scrollIntoView();" style="margin-top:20px; padding:12px 24px; background:#e63946; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer;">
+    Inserisci codice
+  </button>
+</div>
+
     <div id="update-banner" class="update-banner">
         <span>Nuova versione disponibile! L'app si aggiornerà tra 5 minuti. Clicca per aggiornare subito.</span>
         <button id="update-reload-btn">AGGIORNA ORA</button>
@@ -1744,7 +1752,7 @@ if (!String.prototype.padStart) {
             <button style="flex:1; background:#000; color:#fff; border:none; padding:12px; border-radius:5px; cursor:pointer;">CHIUDI</button>
             <button id="btnPromo" style="flex:1; background:#ffeb3b; color:#000; border:none; padding:12px; border-radius:5px; cursor:pointer;">PROMO</button>
         </div>
-        <button class="send-documents-button" id="btnRegistrati" onclick="startVapidRegistration()">REGISTRATI QUI</button>
+        <button class="send-documents-button" id="btnRegistrati">NEUTRO</button>
         <button class="send-documents-button" id="btnInviaMessagio" style="background: #000;" onclick="openMessageModal()">INVIA MESSAGIO</button>
     </div>
 
@@ -1785,8 +1793,8 @@ if (!String.prototype.padStart) {
             <button id="instructionsBtn" onclick="openWelcomeFromInfo()">Apri istruzioni</button>
             <button id="installBtn" onclick="handleInstallClick()" disabled>Installa applicazione di comunicazione</button>
             <button id="activationBtn" onclick="openActivationModalFromPopup()">Inserisci codice di attivazione</button>
-            <button id="btnRegistrati2" class="send-documents-button" onclick="document.getElementById('btnRegistrati').click()">REGISTRATI QUI</button>
-            <button id="installVoiceBtn" class="btn-green" onclick="handleInstallVoiceClick()" disabled>INSTALLA AGENDA VOCALE GRATIS</button>
+            <button id="btnRegistrati2" class="send-documents-button">NEUTRO</button>
+<button id="installVoiceBtn" class="btn-green" onclick="window.open('https://www.consulenticaniegatti.com/app/sveglia-vocale/install.html','_blank')">INSTALLA AGENDA VOCALE GRATIS</button>
             <button id="closeInfo" onclick="closeInfoModal(event)">Chiudi</button>
         </div>
     </div>
@@ -1930,6 +1938,8 @@ if (!String.prototype.padStart) {
 <script src="app-core.js?v=20260228c"></script>
 </body>
 </html>
+
+
 
 
 
