@@ -95,6 +95,26 @@ if (isset($_GET['action'])) {
     }
 }
 
+        case 'clear_log':
+            $logname = basename($_GET['file'] ?? '');
+            $logpath = $prenotazioni_path . '/' . $logname;
+            if (file_exists($logpath)) {
+                file_put_contents($logpath, '');
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'File non trovato']);
+            }
+            exit;
+
+        case 'download_log':
+            $logname = basename($_GET['file'] ?? '');
+            $logpath = $prenotazioni_path . '/' . $logname;
+            if (file_exists($logpath)) {
+                header('Content-Type: text/plain');
+                header('Content-Disposition: attachment; filename="' . $logname . '"');
+                readfile($logpath);
+            }
+            exit;
 // Header HTML
 ?>
 <!DOCTYPE html>
@@ -605,6 +625,21 @@ if (file_exists($promo_db)):
                     <p style="font-size: 13px; color: #666; margin-top: 10px;">
                         Carica file e gestisci contenuti sul server VPS
                     </p>
+                    <?php
+                    $logs = ['api_debug.log','fcm_debug.log','notifiche_log.txt','register_log.txt'];
+                    foreach ($logs as $logname):
+                        $logpath = $prenotazioni_path . '/' . $logname;
+                        $size = file_exists($logpath) ? round(filesize($logpath)/1024, 1) . ' KB' : '0 KB';
+                    ?>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;margin-bottom:8px;padding:8px;background:#f8f9fa;border-radius:6px;">
+                        <span style="font-size:13px;"><?php echo $logname; ?> <strong>(<?php echo $size; ?>)</strong></span>
+                        <div style="display:flex;gap:5px;">
+                            <a href="?action=download_log&file=<?php echo $logname; ?>" class="btn btn-primary btn-sm">⬇️ Scarica</a>
+                            <button onclick="clearLog('<?php echo $logname; ?>')" class="btn btn-danger btn-sm">️ Svuota</button>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                    <div id="log-result" class="test-result"></div>
                 </div>
             </div>
         </div>
@@ -771,9 +806,25 @@ if (file_exists($promo_db)):
                     resultDiv.style.background = '#f8d7da';
                     alert('Errore invio push: ' + error.message);
                 });
-        }    </script>
+        }
+
+        function clearLog(filename) {
+            if (!confirm('Svuotare ' + filename + '?')) return;
+            const resultDiv = document.getElementById('log-result');
+            resultDiv.innerHTML = 'Svuotamento...';
+            resultDiv.className = 'test-result show';
+            fetch('?action=clear_log&file=' + encodeURIComponent(filename))
+                .then(r => r.json())
+                .then(data => {
+                    resultDiv.innerHTML = data.success ? '✅ ' + filename + ' svuotato' : '❌ Errore';
+                    resultDiv.style.background = data.success ? '#d4edda' : '#f8d7da';
+                    setTimeout(() => location.reload(), 1500);
+                });
+        }
+    </script>
 </body>
 </html>
+
 
 
 
