@@ -92,8 +92,6 @@ if (isset($_GET['action'])) {
                 echo json_encode(['success' => false, 'error' => 'Errore salvataggio']);
             }
             exit;
-    }
-}
 
         case 'clear_log':
             $logname = basename($_GET['file'] ?? '');
@@ -115,6 +113,8 @@ if (isset($_GET['action'])) {
                 readfile($logpath);
             }
             exit;
+    }
+}
 // Header HTML
 ?>
 <!DOCTYPE html>
@@ -625,13 +625,16 @@ if (file_exists($promo_db)):
                     <p style="font-size: 13px; color: #666; margin-top: 10px;">
                         Carica file e gestisci contenuti sul server VPS
                     </p>
+                </div>
+                <div>
+                    <h3 style="font-size: 16px; margin-bottom: 10px;"> Gestione Log</h3>
                     <?php
                     $logs = ['api_debug.log','fcm_debug.log','notifiche_log.txt','register_log.txt'];
                     foreach ($logs as $logname):
                         $logpath = $prenotazioni_path . '/' . $logname;
                         $size = file_exists($logpath) ? round(filesize($logpath)/1024, 1) . ' KB' : '0 KB';
                     ?>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;margin-bottom:8px;padding:8px;background:#f8f9fa;border-radius:6px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:8px;background:#f8f9fa;border-radius:6px;">
                         <span style="font-size:13px;"><?php echo $logname; ?> <strong>(<?php echo $size; ?>)</strong></span>
                         <div style="display:flex;gap:5px;">
                             <a href="?action=download_log&file=<?php echo $logname; ?>" class="btn btn-primary btn-sm">⬇️ Scarica</a>
