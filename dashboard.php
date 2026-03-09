@@ -1,13 +1,14 @@
 <?php
+$attivita = $_GET['attivita'] ?? '';
+$base_path = '/root/push/' . $attivita;
 /**
  * PANNELLO MASTER - DIAGNOSTICA E CONTROLLO
- * Applicazione: ristorantemimmo1
+ * Applicazione: $attivita
  * Dominio: puschpromozioni.it
  * Creato: 13 Febbraio 2026
  */
 
 // Configurazione percorsi
-$base_path = '/root/push/ristorantemimmo1';
 $prenotazioni_path = $base_path . '/PRENOTAZIONI';
 $config_path = $base_path . '/config';
 
@@ -452,7 +453,7 @@ if (isset($_GET['action'])) {
                 'icon' => '📱',
                 'file' => 'agenda-cliente-001.html',
                 'path' => $prenotazioni_path . '/agenda-cliente-001.html',
-                'url' => 'https://puschpromozioni.it/ristorantemimmo1/PRENOTAZIONI/agenda-cliente-001.html',
+                'url' => 'https://puschpromozioni.it/' . $attivita . '/PRENOTAZIONI/agenda-cliente-001.html',
                 'description' => 'Applicazione PWA per i clienti del ristorante'
             ],
             [
@@ -460,7 +461,7 @@ if (isset($_GET['action'])) {
                 'icon' => '📅',
                 'file' => 'calendar-ristorante-001.html',
                 'path' => $prenotazioni_path . '/calendar-ristorante-001.html',
-                'url' => 'https://puschpromozioni.it/ristorantemimmo1/PRENOTAZIONI/calendar-ristorante-001.html',
+                'url' => 'https://puschpromozioni.it/' . $attivita . '/PRENOTAZIONI/calendar-ristorante-001.html',
                 'description' => 'Calendario prenotazioni per il ristorante'
             ],
             [
@@ -468,7 +469,7 @@ if (isset($_GET['action'])) {
                 'icon' => '⚙️',
                 'file' => 'admin-promo-ristorante-001.html',
                 'path' => $prenotazioni_path . '/admin-promo-ristorante-001.html',
-                'url' => 'https://puschpromozioni.it/ristorantemimmo1/PRENOTAZIONI/admin-promo-ristorante-001.html',
+                'url' => 'https://puschpromozioni.it/' . $attivita . '/PRENOTAZIONI/admin-promo-ristorante-001.html',
                 'description' => 'Pannello per inviare notifiche promozionali (si apre dal calendario)'
             ]
         ];
@@ -618,7 +619,7 @@ if (file_exists($promo_db)):
                         Uploader VPS
                     </button>
                     <div style="margin-top: 8px;">
-                        <a href="https://puschpromozioni.it/ristorantemimmo1/admin/uploader.php" target="_blank" class="btn btn-secondary">
+                        <a href="https://puschpromozioni.it/<?php echo $attivita; ?>/admin/uploader.php" target="_blank" class="btn btn-secondary">
                             Apri link diretto
                         </a>
                     </div>
@@ -744,7 +745,7 @@ if (file_exists($promo_db)):
             resultDiv.className = 'test-result show';
             resultDiv.style.background = '#fff3cd';
 
-            fetch('https://puschpromozioni.it/ristorantemimmo1/PRENOTAZIONI/promo_api-toilet-001.php?admin=1&t=' + Date.now(), {
+            fetch('https://puschpromozioni.it/<?php echo $attivita; ?>/PRENOTAZIONI/promo_api-toilet-001.php?admin=1&t=' + Date.now(), {
                 cache: 'no-store'
             })
                 .then(response => response.json())
@@ -782,7 +783,7 @@ if (file_exists($promo_db)):
             resultDiv.className = 'test-result show';
             resultDiv.style.background = '#fff3cd';
 
-            fetch('https://puschpromozioni.it/ristorantemimmo1/PRENOTAZIONI/send_push_vps.php', {
+            fetch('https://puschpromozioni.it/<?php echo $attivita; ?>/PRENOTAZIONI/send_push_vps.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
