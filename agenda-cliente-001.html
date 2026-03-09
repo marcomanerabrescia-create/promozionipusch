@@ -117,7 +117,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
-        }
+            background-color: #ffeb3b;
+}
         
         .vet-card h2 {
             margin: 0;
@@ -133,7 +134,8 @@
             .vet-card {
                 padding: 45px 15px;
                 margin-bottom: 8px;
-            }
+                background-color: #ffeb3b;
+}
             
             .vet-card h2 {
                 font-size: 0.85em;
@@ -1485,7 +1487,35 @@
   background: #555;
 }
 
-    </style>
+.logo-container {
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-container img {
+    height: 100%;
+    width: auto;
+    display: block;
+}
+
+    .logo-container {
+    height: auto !important;
+    overflow: visible !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-container img {
+    max-height: 200px;
+    width: auto !important;
+    display: block;
+}
+.vet-card {
+    padding: 2px 15px !important;
+    background-color: #ffeb3b;
+}</style>
 <!-- Push gestite solo via VAPID (SDK push terzi rimosso) -->
 </head>
 <body>
@@ -1724,15 +1754,12 @@ if (!String.prototype.padStart) {
 
     <div class="container">
         <div class="vet-card">
-            <div style="position: relative; padding: 5px;">
-                <span style="position: absolute; top: 0; left: 10px; font-size: 1.2em;">🐕‍🦺</span>
-                <span style="position: absolute; bottom: 0; right: 10px; font-size: 1.2em;">🐩</span>
-                <div style="text-align: center;">
-                    <div style="font-size: 1.8em; font-weight: bold; color: #2c3e50; margin-bottom: 2px;">DOG STYLE</div>
-                    <div style="font-size: 1.1em; color: #34495e;">Prenotazione Toilettatura</div>
-                </div>
-            </div>
-        </div>
+    <div style="text-align: center; padding: 5px;">
+        <img id="business-logo" src="" alt="" style="display:none; margin-bottom: 4px;">
+        <div id="business-name" style="font-size: 1.8em; font-weight: bold; color: #2c3e50; margin-bottom: 2px;"></div>
+        <div id="business-subtitle" style="font-size: 1.1em; color: #34495e;"></div>
+    </div>
+</div>
         
         <div class="month-selector">
             <button class="control-button" onclick="changeMonth(-1)">&lt;</button>
@@ -1936,21 +1963,22 @@ if (!String.prototype.padStart) {
     </div>
 
 <script src="app-core.js?v=20260228c"></script>
+<script>
+fetch('intestazione.json')
+    .then(r => r.json())
+    .then(config => {
+        if (config.business_name !== undefined) document.getElementById('business-name').textContent = config.business_name;
+        if (config.business_subtitle !== undefined) document.getElementById('business-subtitle').textContent = config.business_subtitle;
+        if (config.business_logo) {
+            const logo = document.getElementById('business-logo');
+            logo.src = config.business_logo;
+            logo.style.display = 'block';
+            if (config.logo_height) logo.style.height = config.logo_height + 'px';
+            if (config.logo_width) logo.style.width = config.logo_width + 'px';
+            logo.style.margin = '0 auto 4px auto';
+        }
+    })
+    .catch(() => {});
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
