@@ -1,7 +1,7 @@
 // ========================================
-        // ðŸ”‘ SISTEMA DINAMICO TOELETTATURA
+        // 🔑 SISTEMA DINAMICO TOELETTATURA
         // ========================================
-        let AGENDA_ID = 'TEMP'; // Temporaneo, verrÃ  sostituito dal codice attivazione
+        let AGENDA_ID = 'TEMP'; // Temporaneo, verrà sostituito dal codice attivazione
         console.log('PRIVACY CHECK ALL START:', {
             ls1: localStorage.getItem('privacyAccepted'),
             cookie: document.cookie,
@@ -95,7 +95,7 @@
             console.log('[PUSH DEBUG] received foreground', JSON.stringify(notification));
             const data = notification.data || {};
             if (data.type === 'conferma' && data.data && data.ora) {
-                const messaggio = `âœ… Appuntamento confermato per il ${data.data} alle ${data.ora}. Ti aspettiamo!`;
+                const messaggio = `✅ Appuntamento confermato per il ${data.data} alle ${data.ora}. Ti aspettiamo!`;
                 if (typeof addToPopupQueue === 'function') {
                     addToPopupQueue('push_conferma_' + Date.now(), messaggio, false);
                 }
@@ -401,7 +401,7 @@
         function navigaRobusta(url) {
             console.log('[NAV] Navigazione verso:', url);
             
-            // Metodo 1: location.replace (piÃ¹ affidabile di href)
+            // Metodo 1: location.replace (più affidabile di href)
             try {
                 window.location.replace(url);
                 return true;
@@ -478,20 +478,20 @@
             }
         }
 
-        // Funzione per estrarre il prefisso dal codice (es: AMADORI-VET123 â†’ AMADORI)
+        // Funzione per estrarre il prefisso dal codice (es: AMADORI-VET123 → AMADORI)
         function getPrefissoFromCodice(codice) {
             if (!codice || typeof codice !== 'string') return null;
             const parts = codice.split('-');
             return parts.length > 0 ? parts[0].toUpperCase() : null;
         }
 
-        // Rileva modalitÃ  PWA vs muletto (browser)
+        // Rileva modalità PWA vs muletto (browser)
         const IS_STANDALONE = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
         const IS_MULETTO = !IS_STANDALONE;
         const FORCE_BROWSER_MODE = true;
         const VOICE_APK_URL = 'https://www.puschpromozioni.it/sveglia-vocale/app-debug.apk'; // Link APK agenda vocale
 
-        // DISABILITATO: Non cancellare il codice in modalitÃ  muletto
+        // DISABILITATO: Non cancellare il codice in modalità muletto
         // Questo causava la perdita del codice di attivazione
         // if (IS_MULETTO) {
         //     try {
@@ -562,7 +562,7 @@
             
             // Verifica dopo il caricamento del DOM
             window.addEventListener('DOMContentLoaded', function() {
-                console.log(' AUTO-DIAGNOSI: Controllo integritÃ  file...');
+                console.log(' AUTO-DIAGNOSI: Controllo integrità file...');
                 
                 // Controlla elementi DOM critici
                 const criticalElements = [
@@ -596,7 +596,7 @@
                 }
             });
             
-            // Controlla funzioni dopo 2 secondi (quando tutto Ã¨ caricato)
+            // Controlla funzioni dopo 2 secondi (quando tutto è caricato)
             setTimeout(function() {
                 criticalFunctions.forEach(funcName => {
                     if (typeof window[funcName] !== 'function') {
@@ -707,11 +707,11 @@
         
         async function verificaAutorizzazione() {
             // Questa funzione viene chiamata SOLO se IS_STANDALONE (app installata)
-            // Controlla PRIMA senza prefisso (piÃ¹ affidabile), poi con prefisso
+            // Controlla PRIMA senza prefisso (più affidabile), poi con prefisso
             let codice = localStorage.getItem('activationCode');
             let telefono = localStorage.getItem('activationPhone');
             
-            // Se non trova senza prefisso, prova con prefisso (per compatibilitÃ )
+            // Se non trova senza prefisso, prova con prefisso (per compatibilità)
             if (!codice || !telefono) {
                 codice = storage.getItem('activationCode');
                 telefono = storage.getItem('activationPhone');
@@ -732,7 +732,7 @@
                 }
             }
             
-            // Se il codice esiste in localStorage, consideralo VALIDO (giÃ  verificato in activation.php)
+            // Se il codice esiste in localStorage, consideralo VALIDO (già verificato in activation.php)
             if (codice) {
                 const prefisso = getPrefissoFromCodice(codice);
                 if (prefisso) {
@@ -751,7 +751,7 @@
                 container.style.display = 'flex';
             }
             
-            console.log('âœ… App giÃ  attivata - Codice:', codice);
+            console.log('✅ App già attivata - Codice:', codice);
             return true;
         }
         
@@ -829,7 +829,7 @@
                       } else {
                           console.log('[PUSH DEBUG] after activation -> NOT calling registerNativePush (isNative=', window.Capacitor?.isNativePlatform ? window.Capacitor.isNativePlatform() : 'n/a', ')');
                       }
-                    // Salva anche con prefisso per compatibilitÃ  al reload
+                    // Salva anche con prefisso per compatibilità al reload
                     storage.setItem('activationCode', codice);
                     storage.setItem('activationPhone', telefono);
 
@@ -842,7 +842,7 @@
                     const container = document.querySelector('.container');
                     if (container) container.style.display = 'flex';
                     
-                    errorEl.textContent = 'âœ… Attivazione completata!';
+                    errorEl.textContent = '✅ Attivazione completata!';
                     errorEl.style.color = '#27ae60';
                     errorEl.classList.add('show');
                     
@@ -862,11 +862,11 @@
                             console.warn('ALREADY_REGISTERED (demo): nessun blocco, resta muletto');
                             return;
                         }
-                        errorMessage = 'âŒ Codice giÃ  in uso su altro dispositivo';
+                        errorMessage = '❌ Codice già in uso su altro dispositivo';
                     } else if (result.error === 'INVALID_CODE') {
-                        errorMessage = 'âŒ Codice non valido';
+                        errorMessage = '❌ Codice non valido';
                     } else if (result.error === 'CODE_DISABLED') {
-                        errorMessage = 'âŒ Codice disattivato';
+                        errorMessage = '❌ Codice disattivato';
                     }
                     
                     showActivationError(errorMessage);
@@ -882,7 +882,7 @@
                 
             } catch (error) {
                 console.error(' ERRORE CHIAMATA activation.php:', error);
-                showActivationError('âŒ Errore di connessione. Riprova.');
+                showActivationError('❌ Errore di connessione. Riprova.');
                 console.error(error);
             } finally {
                 btn.disabled = false;
@@ -899,9 +899,9 @@
             }, 3000);
         }
 
-        // Impedisce chiusura modale attivazione se non c'Ã¨ codice
+        // Impedisce chiusura modale attivazione se non c'è codice
         function preventCloseIfNoCode(event) {
-            // Se clicca fuori dal contenuto (sullo sfondo), controlla se c'Ã¨ codice
+            // Se clicca fuori dal contenuto (sullo sfondo), controlla se c'è codice
             if (event.target.id === 'activation-modal') {
                 // Solo in app installata: impedisci chiusura se non attivata
                 if (IS_STANDALONE) {
@@ -914,11 +914,11 @@
                         telefono = localStorage.getItem('activationPhone');
                     }
                     
-                    // Se non c'Ã¨ codice, NON chiudere il modale (BLOCCO OBBLIGATORIO)
+                    // Se non c'è codice, NON chiudere il modale (BLOCCO OBBLIGATORIO)
                     if (!codice || !telefono) {
                         event.preventDefault();
                         event.stopPropagation();
-                        console.log('ðŸš« Modal attivazione NON chiudibile - App non attivata');
+                        console.log('🚫 Modal attivazione NON chiudibile - App non attivata');
                         return false;
                     }
                 }
@@ -970,7 +970,7 @@
                 if (location.origin === 'null' || location.origin === '' || location.protocol === 'file:') {
                     return 'https://puschpromozioni.it/ristorantemimmo1/PRENOTAZIONI/';
                 }
-                // Se siamo giÃ  sul dominio corretto, usa relativo
+                // Se siamo già sul dominio corretto, usa relativo
                 if (location.hostname && location.pathname.includes('/ristorantemimmo1/PRENOTAZIONI')) {
                     return '';
                 }
@@ -1055,22 +1055,22 @@
         }
 function openActivationModalManual() {
             // DEBUG: Verifica valore IS_MULETTO
-            console.log('ðŸ” DEBUG openActivationModalManual - IS_MULETTO:', IS_MULETTO, 'IS_STANDALONE:', IS_STANDALONE);
+            console.log('🔍 DEBUG openActivationModalManual - IS_MULETTO:', IS_MULETTO, 'IS_STANDALONE:', IS_STANDALONE);
             
-            // BLOCCA completamente in modalitÃ  browser
+            // BLOCCA completamente in modalità browser
             if (IS_MULETTO && !FORCE_BROWSER_MODE) {
-                console.log('âœ… BLOCCO ATTIVO - Mostro alert');
-                showCustomAlert('âš ï¸ INSTALLA PRIMA L\'APP!\n\nIl codice di attivazione puÃ² essere inserito solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
+                console.log('✅ BLOCCO ATTIVO - Mostro alert');
+                showCustomAlert('⚠️ INSTALLA PRIMA L\'APP!\n\nIl codice di attivazione può essere inserito solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
                 return;
             }
             
-            console.log('âš ï¸ BLOCCO NON ATTIVO - Continuo con apertura modal');
+            console.log('⚠️ BLOCCO NON ATTIVO - Continuo con apertura modal');
             
         const code = storage.getItem('activationCode');
         
-        // Se giÃ  attivata, mostra messaggio
+        // Se già attivata, mostra messaggio
         if (code && IS_STANDALONE) {
-            showCustomAlert('âœ… Applicazione giÃ  attivata', false);
+            showCustomAlert('✅ Applicazione già attivata', false);
                 return;
             }
         
@@ -1108,15 +1108,15 @@ const ActionDispatcher = {
     
     register(actionName, handler) {
         this.handlers[actionName] = handler;
-        console.log('âœ… Registrata azione:', actionName);
+        console.log('✅ Registrata azione:', actionName);
     },
     
     dispatch(actionName, ...args) {
         if (this.handlers[actionName]) {
-            console.log('ðŸš€ Dispatch azione:', actionName);
+            console.log('🚀 Dispatch azione:', actionName);
             return this.handlers[actionName](...args);
         }
-        console.error('âŒ Azione non trovata:', actionName);
+        console.error('❌ Azione non trovata:', actionName);
         return null;
     }
 };
@@ -1168,27 +1168,27 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
             currentPopupId = popup.id;
             
             showCustomAlert(popup.message, popup.isError);
-            // Nessuna autoâ€‘chiusura qui: si chiude solo con la X (closeAlert)
+            // Nessuna auto‑chiusura qui: si chiude solo con la X (closeAlert)
         }
         // ===== POLLING GLOBALE =====
         let refreshInProgress = false;
         let refreshFailCount = 0;
         async function refreshGlobalAppointments() {
             if (refreshInProgress) {
-                console.warn('âš ï¸ refresh giÃ  in corso, salto.');
+                console.warn('⚠️ refresh già in corso, salto.');
                 return;
             }
             try {
                 refreshInProgress = true;
-                console.log('ðŸ”„ Aggiornamento appuntamenti in corso...');
+                console.log('🔄 Aggiornamento appuntamenti in corso...');
                 const response = await fetch('api.php');
 
                 
                 if (!response.ok) {
-                    console.error('âŒ Errore HTTP:', response.status, response.statusText);
+                    console.error('❌ Errore HTTP:', response.status, response.statusText);
                     refreshFailCount++;
                     if (refreshFailCount >= 3) {
-                        console.warn('âš ï¸ Troppi errori consecutivi, stop polling temporaneo.');
+                        console.warn('⚠️ Troppi errori consecutivi, stop polling temporaneo.');
                         return;
                     }
                     return;
@@ -1196,11 +1196,11 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
                 
                 refreshFailCount = 0;
                 globalAppointmentsCache = await response.json();
-                console.log('âœ… Appuntamenti caricati:', globalAppointmentsCache.length, 'totali');
+                console.log('✅ Appuntamenti caricati:', globalAppointmentsCache.length, 'totali');
                 
                 // Mostra appuntamenti per debug
                 if (globalAppointmentsCache.length > 0) {
-                    console.log('ðŸ“… Primi 3 appuntamenti:', globalAppointmentsCache.slice(0, 3).map(a => ({
+                    console.log('📅 Primi 3 appuntamenti:', globalAppointmentsCache.slice(0, 3).map(a => ({
                         data: (a && a.start) ? a.start.substring(0, 10) : '',
                         ora: (a && a.start) ? a.start.substring(11, 16) : '',
                         cliente: (a && a.extendedProps && a.extendedProps.cliente) || (a && a.title) || ''
@@ -1214,12 +1214,12 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
                 }
                 
             } catch (error) {
-                console.error('âŒ ERRORE polling globale:', error);
-                console.error('âŒ Tipo errore:', error.name);
-                console.error('âŒ Messaggio:', error.message);
+                console.error('❌ ERRORE polling globale:', error);
+                console.error('❌ Tipo errore:', error.name);
+                console.error('❌ Messaggio:', error.message);
                 refreshFailCount++;
                 if (refreshFailCount >= 3) {
-                    console.warn('âš ï¸ Troppi errori consecutivi, stop polling temporaneo.');
+                    console.warn('⚠️ Troppi errori consecutivi, stop polling temporaneo.');
                     return;
                 }
             } finally {
@@ -1258,11 +1258,11 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
                     const primoNome = (nome.split(' ')[0]) || '';
                     const animale = (appt && appt.extendedProps && appt.extendedProps.pet_name) || '';
 
-                    let messaggio = `Ciao ${primoNome}! âœ… Confermato il tuo appuntamento`;
+                    let messaggio = `Ciao ${primoNome}! ✅ Confermato il tuo appuntamento`;
                     if (animale) messaggio += ` con ${animale}`;
                     messaggio += ` per ${dateStr} alle ${timeStr}. Ti aspettiamo!`;
 
-                    // Suono conferma appuntamento ðŸ”Š (TEMPORANEAMENTE DISATTIVATO)
+                    // Suono conferma appuntamento 🔊 (TEMPORANEAMENTE DISATTIVATO)
                     /* try {
                         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                         const osc1 = audioContext.createOscillator();
@@ -1283,9 +1283,9 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
                         osc2.start(audioContext.currentTime + 0.2);
                         osc2.stop(audioContext.currentTime + 0.4);
                         
-                        console.log('ðŸ”Š Suono conferma riprodotto!');
+                        console.log('🔊 Suono conferma riprodotto!');
                     } catch (e) {
-                        console.log('âš ï¸ Suono conferma non riproducibile:', e);
+                        console.log('⚠️ Suono conferma non riproducibile:', e);
                     } */
 
                     addToPopupQueue(popupId, messaggio, false);
@@ -1305,7 +1305,7 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
         }
        
         // ========================================
-        // âš ï¸ ATTENZIONE AI/ASSISTENTI: NON MODIFICARE QUESTA SEZIONE!
+        // ⚠️ ATTENZIONE AI/ASSISTENTI: NON MODIFICARE QUESTA SEZIONE!
         // Se stai fixando qualcosa in altra parte del file e pensi che
         // la soluzione coinvolga il codice qui sotto, FERMATI.
         // Non toccare niente. Scrivi solo:
@@ -1314,9 +1314,9 @@ ActionDispatcher.register('closePromoModal', closePromoModal);
         // Funzioni protette: updateCalendar, renderCustomGrid,
         // showSlotList, loadSlots, getAvailableSlots, parseTime,
         // formatTime, refreshGlobalAppointments, workingHours.
-        // âš ï¸ CRITICAL CALENDAR FUNCTIONS - DO NOT EDIT OR REMOVE!
-        // âš ï¸ Queste funzioni sono ESSENZIALI per il funzionamento del calendario
-        // âš ï¸ Qualsiasi modifica romperÃ  il sistema di prenotazione
+        // ⚠️ CRITICAL CALENDAR FUNCTIONS - DO NOT EDIT OR REMOVE!
+        // ⚠️ Queste funzioni sono ESSENZIALI per il funzionamento del calendario
+        // ⚠️ Qualsiasi modifica romperà il sistema di prenotazione
         // ========================================
         
         setInterval(refreshGlobalAppointments, 8000);
@@ -1381,13 +1381,13 @@ calendarContainer.style.width = '';
         }
         
         // ========================================
-        // âš ï¸ FINE SEZIONE CRITICA CALENDARIO - DO NOT EDIT ABOVE!
+        // ⚠️ FINE SEZIONE CRITICA CALENDARIO - DO NOT EDIT ABOVE!
         // ========================================
         
         async function showSlotList(dateStr) {
             // Blocca se non installata (muletto/browser)
             if (IS_MULETTO && !FORCE_BROWSER_MODE) {
-                showCustomAlert('âš ï¸ INSTALLA PRIMA L\'APP!\n\nLe prenotazioni sono disponibili solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
+                showCustomAlert('⚠️ INSTALLA PRIMA L\'APP!\n\nLe prenotazioni sono disponibili solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
                 return;
             }
             
@@ -1408,9 +1408,9 @@ calendarContainer.style.width = '';
         
         async function loadSlots(dateStr, listEl) {
             try {
-                console.log('ðŸ” Caricamento slot per data:', dateStr);
+                console.log('🔍 Caricamento slot per data:', dateStr);
                 const appointments = globalAppointmentsCache;
-                console.log('ðŸ“¦ Appuntamenti totali in cache:', appointments.length);
+                console.log('📦 Appuntamenti totali in cache:', appointments.length);
                 
                 const oggi = new Date();
                 oggi.setHours(0, 0, 0, 0);
@@ -1421,9 +1421,9 @@ calendarContainer.style.width = '';
                     return appt.start.startsWith(dateStr);
                 });
                 
-                console.log('ðŸ“… Appuntamenti trovati per', dateStr, ':', apptsDelGiorno.length);
+                console.log('📅 Appuntamenti trovati per', dateStr, ':', apptsDelGiorno.length);
                 if (apptsDelGiorno.length > 0) {
-                    console.log('ðŸ• Orari occupati:', apptsDelGiorno.map(a => a.start.substring(11, 16)));
+                    console.log('🕐 Orari occupati:', apptsDelGiorno.map(a => a.start.substring(11, 16)));
                 }
                 
                 const occupiedSlots = appointments
@@ -1433,7 +1433,7 @@ calendarContainer.style.width = '';
                     })
                     .map(appt => appt.start.substring(11, 16));
                 
-                console.log('ðŸ”’ Slot occupati estratti:', occupiedSlots);
+                console.log('🔒 Slot occupati estratti:', occupiedSlots);
                 
                 const slots = getAvailableSlots(dateStr, occupiedSlots);
                 
@@ -1516,7 +1516,7 @@ calendarContainer.style.width = '';
         async function addAppointment() {
             // Blocca se non installata (muletto/browser)
             if (IS_MULETTO && !FORCE_BROWSER_MODE) {
-                showCustomAlert('âš ï¸ INSTALLA PRIMA L\'APP!\n\nQuesta funzione Ã¨ disponibile solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
+                showCustomAlert('⚠️ INSTALLA PRIMA L\'APP!\n\nQuesta funzione è disponibile solo dopo aver installato l\'app sul telefono.\n\nVai su "ISTRUZIONI UTILIZZO" per installare l\'app.', true);
                 closeSlotModal();
                 return;
             }
@@ -1547,7 +1547,7 @@ calendarContainer.style.width = '';
                 });
                 
                 if (slotOccupato) {
-                    showCustomAlert('Questo orario Ã¨ stato appena prenotato. Scegli un altro orario.', true);
+                    showCustomAlert('Questo orario è stato appena prenotato. Scegli un altro orario.', true);
                     document.getElementById('bookingForm').style.display = 'none';
                     document.getElementById('availableSlotsList').style.display = 'block';
                     document.getElementById('modalTitle').textContent = `Orari disponibili per il ${new Date(dateStr).toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'long' })}`;
@@ -1561,7 +1561,7 @@ calendarContainer.style.width = '';
                 }).length;
                 
                 if (appuntamentiDelGiorno >= 15) {
-                    showCustomAlert('Giorno completo. Il servizio ha giÃ  15 appuntamenti. Scegli un altro giorno.', true);
+                    showCustomAlert('Giorno completo. Il servizio ha già 15 appuntamenti. Scegli un altro giorno.', true);
                     closeSlotModal();
                     return;
                 }
@@ -1749,7 +1749,7 @@ calendarContainer.style.width = '';
 }
 
         function getPrivacyAccepted() {
-            // compat: usi 2 chiavi giÃ  presenti + cookie
+            // compat: usi 2 chiavi già presenti + cookie
             const ls = localStorage.getItem('privacyAccepted') === 'true';
             const ck = getCookie('privacyAccepted') === 'true';
             return ls || ck;
@@ -1846,7 +1846,7 @@ calendarContainer.style.width = '';
         function acceptPrivacy() {
   acceptPrivacyAndPersist();
   document.getElementById('privacyModal').style.display = 'none';
-  showCustomAlert('âœ… Privacy accettata', false);
+  showCustomAlert('✅ Privacy accettata', false);
 }
 
         function parseTime(timeStr) {
@@ -1879,30 +1879,30 @@ calendarContainer.style.width = '';
         function mostraPromozioneModal(promo, orario = null){
             try {
                 if (shouldBlockAutoPopup()) {
-                    console.log('â›” Popup automatici bloccati durante visualizzazione PUSH.');
+                    console.log('⛔ Popup automatici bloccati durante visualizzazione PUSH.');
                     return;
                 }
-                console.log('ðŸŽ¨ Creo modal per promozione:', promo, 'Orario:', orario);
+                console.log('🎨 Creo modal per promozione:', promo, 'Orario:', orario);
                 let pm=document.getElementById('promo-modal');
                 if(!pm){
-                    console.log('ðŸ“¦ Creo nuovo elemento modal');
+                    console.log('📦 Creo nuovo elemento modal');
                     pm=document.createElement('div');
                     pm.id='promo-modal';
                     pm.style.cssText='display:flex;position:fixed;z-index:10000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center';
                     document.body.appendChild(pm);
                 } else {
-                    console.log('â™»ï¸ Riuso modal esistente');
+                    console.log('♻️ Riuso modal esistente');
                 }
                 const di=new Date(promo.data_inizio).toLocaleDateString('it-IT');
                 const df=new Date(promo.data_fine).toLocaleDateString('it-IT');
-                console.log('ðŸ“… Date formattate - Inizio:', di, 'Fine:', df);
+                console.log('📅 Date formattate - Inizio:', di, 'Fine:', df);
                 
-                const orarioHtml = orario ? `<div style="background:#FFF3E0;padding:8px;border-radius:5px;margin-top:10px;font-weight:bold;color:#E65100">â° Orario: ${orario}</div>` : '';
-                const orarioPushHtml = promo.push_attivo == 1 && !orario ? `<div style="background:#E3F2FD;padding:10px;border-radius:5px;margin-top:10px;font-weight:bold;color:#1976D2;text-align:center">ðŸ’¬ Pop-up mostrato alle ore: ${new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}</div>` : '';
+                const orarioHtml = orario ? `<div style="background:#FFF3E0;padding:8px;border-radius:5px;margin-top:10px;font-weight:bold;color:#E65100">⏰ Orario: ${orario}</div>` : '';
+                const orarioPushHtml = promo.push_attivo == 1 && !orario ? `<div style="background:#E3F2FD;padding:10px;border-radius:5px;margin-top:10px;font-weight:bold;color:#1976D2;text-align:center">💬 Pop-up mostrato alle ore: ${new Date().toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'})}</div>` : '';
                 pm.innerHTML = `
                     <div style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:15px;width:90%;max-width:500px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.3)">
                         <div style="background:rgba(255,255,255,0.15);padding:25px;text-align:center;color:white;border-bottom:2px solid rgba(255,255,255,0.2)">
-                         <h2 style="margin:0;font-size:28px">ðŸ’¬ðŸ© ${promo.push_attivo == 1 ? promo.titolo : 'POP-UP: ' + promo.titolo}</h2>  
+                         <h2 style="margin:0;font-size:28px">💬🐩 ${promo.push_attivo == 1 ? promo.titolo : 'POP-UP: ' + promo.titolo}</h2>  
                         </div>
                         <div style="padding:30px;background:white;color:#333">
                             <p style="font-size:18px;line-height:1.6;margin-bottom:20px">${promo.messaggio}</p>
@@ -1928,12 +1928,12 @@ calendarContainer.style.width = '';
                 // Salva l'orario DOPO aver impostato innerHTML (per evitare che venga perso)
                 if(orario) {
                     pm.setAttribute('data-orario', orario);
-                    console.log('ðŸ’¾ Orario salvato sul modal:', orario);
+                    console.log('💾 Orario salvato sul modal:', orario);
                 }
                 
                 pm.style.display = 'flex';
                 
-                // Suono notifica POTENTE ðŸ”Š (TEMPORANEAMENTE DISATTIVATO)
+                // Suono notifica POTENTE 🔊 (TEMPORANEAMENTE DISATTIVATO)
                 /* try {
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     
@@ -1957,14 +1957,14 @@ calendarContainer.style.width = '';
                     osc2.start(audioContext.currentTime + 0.2);
                     osc2.stop(audioContext.currentTime + 0.4);
                     
-                    console.log('ðŸ”Š Suono POTENTE riprodotto!');
+                    console.log('🔊 Suono POTENTE riprodotto!');
                 } catch (e) {
-                    console.log('âš ï¸ Suono non riproducibile:', e);
+                    console.log('⚠️ Suono non riproducibile:', e);
                 } */
                 
-                console.log('âœ… Modal mostrato!');
+                console.log('✅ Modal mostrato!');
             } catch (error) {
-                console.error('âŒ ERRORE mostraPromozioneModal:', error);
+                console.error('❌ ERRORE mostraPromozioneModal:', error);
             }
         }
         
@@ -1973,35 +1973,35 @@ calendarContainer.style.width = '';
             if(pm){
                 // Recupera la vistaKey dall'attributo data O dalla variabile globale
                 let vistaKey = pm.getAttribute('data-vista-key') || currentPromoVistaKey;
-                console.log('ðŸ” closePromoModal - VistaKey recuperata:', vistaKey, '(da attributo:', pm.getAttribute('data-vista-key'), ', da globale:', currentPromoVistaKey + ')');
+                console.log('🔍 closePromoModal - VistaKey recuperata:', vistaKey, '(da attributo:', pm.getAttribute('data-vista-key'), ', da globale:', currentPromoVistaKey + ')');
                 
                 if(vistaKey){
                     // Usa localStorage direttamente (senza prefisso AGENDA_ID) per evitare problemi se AGENDA_ID cambia
                     localStorage.setItem(vistaKey, 'true');
-                    console.log('âœ… Promozione marcata come vista e salvata:', vistaKey);
+                    console.log('✅ Promozione marcata come vista e salvata:', vistaKey);
                     // Verifica che sia stata salvata
                     const verificato = localStorage.getItem(vistaKey);
-                    console.log('ðŸ” Verifica salvataggio - Leggendo:', verificato, '(Chiave completa:', vistaKey + ')');
+                    console.log('🔍 Verifica salvataggio - Leggendo:', verificato, '(Chiave completa:', vistaKey + ')');
                     // Resetta la variabile globale
                     currentPromoVistaKey = null;
                 } else {
-                    console.warn('âš ï¸ VistaKey non trovata nÃ© sul modal nÃ© in variabile globale!');
+                    console.warn('⚠️ VistaKey non trovata né sul modal né in variabile globale!');
                 }
                 pm.style.display='none';
             } else {
-                console.warn('âš ï¸ Modal promozione non trovato!');
+                console.warn('⚠️ Modal promozione non trovato!');
             }
         }
         
         // RESET COMPLETO APP (per test e debug)
         function resetCompleteApp() {
-            if (confirm('âš ï¸ ATTENZIONE!\n\nQuesto cancellerÃ :\n- Codice attivazione\n- Tutti gli appuntamenti\n- Tutti i documenti\n- Tutte le promozioni viste\n\nSei sicuro?')) {
-                console.log('ðŸ”„ Reset completo in corso...');
+            if (confirm('⚠️ ATTENZIONE!\n\nQuesto cancellerà:\n- Codice attivazione\n- Tutti gli appuntamenti\n- Tutti i documenti\n- Tutte le promozioni viste\n\nSei sicuro?')) {
+                console.log('🔄 Reset completo in corso...');
                 storage.clear();
                 if (db) {
                     indexedDB.deleteDatabase('VetDocumentsDB');
                 }
-                alert('âœ… Reset completato!\n\nLa pagina verrÃ  ricaricata.');
+                alert('✅ Reset completato!\n\nLa pagina verrà ricaricata.');
                 location.reload();
             }
         }
@@ -2053,17 +2053,17 @@ calendarContainer.style.width = '';
         }
         
         function checkPromozioniToilettatura(){
-            console.log('ðŸš€ Controllo promozioni...');
+            console.log('🚀 Controllo promozioni...');
             fetch('../promo_api-toilet-001.php')
                 .then(r=>{
-                    console.log('ðŸ“¨ Risposta API promozioni ricevuta:', r.status);
+                    console.log('📨 Risposta API promozioni ricevuta:', r.status);
                     return r.json();
                 })
                 .then(data=>{
-                    console.log('ðŸ“¦ Promozioni ricevute:', data);
+                    console.log('📦 Promozioni ricevute:', data);
                     const promozioni = data.promozioni || data;
                     if(Array.isArray(promozioni)&&promozioni.length>0){
-                        console.log('âœ… Trovate', promozioni.length, 'promozioni');
+                        console.log('✅ Trovate', promozioni.length, 'promozioni');
                         try {
                             setCoverOverlayFromPromo(promozioni[0]);
                         } catch (e) {
@@ -2073,10 +2073,10 @@ calendarContainer.style.width = '';
                         const blockAutoPopup = shouldBlockAutoPopup();
                         promozioni.forEach(promo=>{
                             if (blockAutoPopup) {
-                                console.log('â›” Popup automatici bloccati durante visualizzazione PUSH.');
+                                console.log('⛔ Popup automatici bloccati durante visualizzazione PUSH.');
                                 return;
                             }
-                            // Controlla se la promozione Ã¨ valida in base alle date
+                            // Controlla se la promozione è valida in base alle date
                             const oggi = new Date();
                             oggi.setHours(0, 0, 0, 0);
                             
@@ -2086,14 +2086,14 @@ calendarContainer.style.width = '';
                             const dataFine = new Date(promo.data_fine);
                             dataFine.setHours(23, 59, 59, 999);
                             
-                            // Verifica se la promozione Ã¨ nel periodo valido
+                            // Verifica se la promozione è nel periodo valido
                             if (oggi < dataInizio) {
-                                console.log('âŒ› Promo ID', promo.id, '- Non ancora iniziata (inizia:', promo.data_inizio + ')');
+                                console.log('⌛ Promo ID', promo.id, '- Non ancora iniziata (inizia:', promo.data_inizio + ')');
                                 return;
                             }
                             
                             if (oggi > dataFine) {
-                                console.log('â³ Promo ID', promo.id, '- Scaduta (finiva:', promo.data_fine + ')');
+                                console.log('⏳ Promo ID', promo.id, '- Scaduta (finiva:', promo.data_fine + ')');
                                 return;
                             }
                             
@@ -2112,12 +2112,12 @@ calendarContainer.style.width = '';
                                         orariConfigurati = [];
                                     }
                                 } catch (e) {
-                                    console.warn('âš ï¸ Errore parsing orari:', e);
+                                    console.warn('⚠️ Errore parsing orari:', e);
                                     orariConfigurati = [];
                                 }
                             }
                             
-                            // Se ci sono orari configurati, controlla se Ã¨ il momento di mostrarli
+                            // Se ci sono orari configurati, controlla se è il momento di mostrarli
                             if (promo.popup_attivo == 1 && orariConfigurati.length > 0) {
                                 const oraAttuale = new Date();
                                 const oraAttualeNum = oraAttuale.getHours();
@@ -2127,7 +2127,7 @@ calendarContainer.style.width = '';
                                 
                                 const dataOggi = oggi.toISOString().split('T')[0];
                                 
-                                // Trova l'ULTIMO orario passato che non Ã¨ stato ancora mostrato
+                                // Trova l'ULTIMO orario passato che non è stato ancora mostrato
                                 let ultimoOrarioDaMostrare = null;
                                 
                                 for (const orario of orariConfigurati) {
@@ -2135,20 +2135,20 @@ calendarContainer.style.width = '';
                                     const oraTarget = parseInt(ora);
                                     const minutoTarget = parseInt(minuto);
                                     
-                                    // Controlla se questo orario Ã¨ giÃ  stato mostrato oggi
+                                    // Controlla se questo orario è già stato mostrato oggi
                                     const chiaveOrario = 'PROMO_' + promo.id + '_orario_' + orario + '_' + dataOggi;
                                     const giaMostrato = localStorage.getItem(chiaveOrario);
                                     
                                     if (giaMostrato) {
-                                        continue; // GiÃ  mostrato, vai al prossimo
+                                        continue; // Già mostrato, vai al prossimo
                                     }
                                     
-                                    // Controlla se siamo oltre questo orario (l'orario Ã¨ passato o Ã¨ adesso)
+                                    // Controlla se siamo oltre questo orario (l'orario è passato o è adesso)
                                     const oraPassed = (oraAttualeNum > oraTarget) || 
                                                     (oraAttualeNum === oraTarget && minutoAttualeNum >= minutoTarget);
                                     
                                     if (oraPassed) {
-                                        // Questo orario Ã¨ passato e non Ã¨ stato ancora mostrato - ricordalo
+                                        // Questo orario è passato e non è stato ancora mostrato - ricordalo
                                         ultimoOrarioDaMostrare = orario;
                                         // Continua il loop per trovare l'ULTIMO orario passato
                                     }
@@ -2156,19 +2156,19 @@ calendarContainer.style.width = '';
                                 
                                 // Se abbiamo trovato un orario passato da mostrare, mostra solo quello
                                 if (ultimoOrarioDaMostrare) {
-                                    console.log('âœ… Promo ID', promo.id, '- Mostro ULTIMO orario passato:', ultimoOrarioDaMostrare);
+                                    console.log('✅ Promo ID', promo.id, '- Mostro ULTIMO orario passato:', ultimoOrarioDaMostrare);
                                     const chiaveOrario = 'PROMO_' + promo.id + '_orario_' + ultimoOrarioDaMostrare + '_' + dataOggi;
                                     localStorage.setItem(chiaveOrario, 'true');
                                     mostraPromozioneModal(promo, ultimoOrarioDaMostrare);
                                     return;
                                 }
                                 
-                                // Se arriviamo qui, tutti gli orari sono ancora nel futuro o giÃ  mostrati
-                                console.log('â­ Promo ID', promo.id, '- Nessun orario da mostrare adesso. Prossimi orari:', orariConfigurati);
+                                // Se arriviamo qui, tutti gli orari sono ancora nel futuro o già mostrati
+                                console.log('⏭ Promo ID', promo.id, '- Nessun orario da mostrare adesso. Prossimi orari:', orariConfigurati);
                                 return;
                             }
                             
-                            console.log('ðŸ“Š Promo ID', promo.id, '- Max visualizzazioni:', maxVisualizzazioni);
+                            console.log('📊 Promo ID', promo.id, '- Max visualizzazioni:', maxVisualizzazioni);
                             
                             // USA localStorage DIRETTO con prefisso PROMO_ (separato da AGENDA_ID)
                             const contatoreKey = 'PROMO_' + promo.id + '_contatore';
@@ -2176,84 +2176,84 @@ calendarContainer.style.width = '';
                             // Leggi contatore
                             let contatore = parseInt(localStorage.getItem(contatoreKey) || '0');
                             
-                            console.log('ðŸ“ˆ Promo ID', promo.id, '- Contatore:', contatore + '/' + maxVisualizzazioni);
+                            console.log('📈 Promo ID', promo.id, '- Contatore:', contatore + '/' + maxVisualizzazioni);
                             
-                            // Se ha giÃ  raggiunto il massimo, salta
+                            // Se ha già raggiunto il massimo, salta
                             if (contatore >= maxVisualizzazioni) {
-                                console.log('â›” Promo ID', promo.id, '- GiÃ  mostrata', maxVisualizzazioni, 'volte, STOP');
+                                console.log('⛔ Promo ID', promo.id, '- Già mostrata', maxVisualizzazioni, 'volte, STOP');
                                 return;
                             }
                             
                             // OK, mostra la promo!
-                            console.log('ðŸŽ¯ Mostro promozione:', promo.titolo, '(visualizzazione', (contatore + 1), 'di', maxVisualizzazioni + ')');
+                            console.log('🎯 Mostro promozione:', promo.titolo, '(visualizzazione', (contatore + 1), 'di', maxVisualizzazioni + ')');
                             
                             // Incrementa contatore SUBITO usando localStorage diretto
                             localStorage.setItem(contatoreKey, (contatore + 1).toString());
                             
-                            console.log('ðŸ’¾ Salvato - Contatore:', (contatore + 1));
+                            console.log('💾 Salvato - Contatore:', (contatore + 1));
                             
                             mostraPromozioneModal(promo);
                         });
                     } else {
-                        console.log('â„¹ï¸ Nessuna promozione disponibile o formato non valido');
+                        console.log('ℹ️ Nessuna promozione disponibile o formato non valido');
                     }
                 })
                 .catch(err=>{
-                    console.error('âŒ ERRORE caricamento promozioni:', err);
+                    console.error('❌ ERRORE caricamento promozioni:', err);
                 });
         }
         // ========== FINE SISTEMA PROMOZIONI ==========
 
-console.log('ðŸš€ SISTEMA PROMOZIONI AVVIATO - Primo controllo tra 1 secondo...');
+console.log('🚀 SISTEMA PROMOZIONI AVVIATO - Primo controllo tra 1 secondo...');
         // setTimeout(()=>checkPromozioniToilettatura(),1000);
         // setInterval(checkPromozioniToilettatura, 10000); // Controlla ogni 10 secondi
         // document.addEventListener('visibilitychange', () => { if (!document.hidden) checkPromozioniToilettatura(); });
         // ========== FINE PROMOZIONI ==========
 
-// Identifica che la versione remota Ã¨ attiva (impedisce doppio avvio del codice locale)
+// Identifica che la versione remota è attiva (impedisce doppio avvio del codice locale)
       window.__REMOTE_APP__ = true;
 
       // Messaggio di test per capire che il file remoto si carica
       console.log('Remote app loaded: 2025.11.06-FIX');
 
       // Qui in futuro metteremo tutta la logica "master" centralizzata.
-      // Per ora lasciamo solo il log, cosÃ¬ verifichiamo che tutto funziona.
+      // Per ora lasciamo solo il log, così verifichiamo che tutto funziona.
 
 // AUTO-UPDATE: Controlla aggiornamenti ogni 30 secondi
       
       // ========== RICHIESTA PERMESSO NOTIFICHE ========== - DISABILITATA (gestione push esterna)
       /*
       function richiediPermessoNotifiche() {
-        // Controlla se giÃ  richiesto
+        // Controlla se già richiesto
         if (localStorage.getItem('notificationPermissionAsked') === 'true') {
-          console.log('âœ… Permesso notifiche giÃ  richiesto');
+          console.log('✅ Permesso notifiche già richiesto');
           return;
         }
         
         // Controlla se il browser supporta le notifiche
         if (!('Notification' in window)) {
-          console.warn('âŒ Browser non supporta notifiche');
+          console.warn('❌ Browser non supporta notifiche');
           return;
         }
         
-        // Se giÃ  concesso, non chiedere di nuovo
+        // Se già concesso, non chiedere di nuovo
         if (Notification.permission === 'granted') {
-          console.log('âœ… Notifiche giÃ  abilitate');
+          console.log('✅ Notifiche già abilitate');
           return;
         }
         
         // Mostra popup personalizzato
-        if (confirm('ðŸ”” Abilita notifiche informative utili per te\n\nRiceverai promemoria per i tuoi appuntamenti e informazioni importanti da DOG STYLE!')) {
+        if (confirm('🔔 Abilita notifiche informative utili per te\n\nRiceverai promemoria per i tuoi appuntamenti e informazioni importanti da DOG STYLE!')) {
           Notification.requestPermission().then(function(permission) {
             localStorage.setItem('notificationPermissionAsked', 'true');
             
             if (permission === 'granted') {
-              console.log('âœ… Permesso notifiche concesso!');
+              console.log('✅ Permesso notifiche concesso!');
               
               // Invia notifica di test
               if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
                 navigator.serviceWorker.ready.then(function(registration) {
-                  registration.showNotification('ðŸ• DOG STYLE', {
+                  registration.showNotification('🐕 DOG STYLE', {
                     body: 'Notifiche attivate! Ti avviseremo prima degli appuntamenti.',
                     icon: './icon-192.png',
                     badge: './icon-192.png',
@@ -2262,19 +2262,19 @@ console.log('ðŸš€ SISTEMA PROMOZIONI AVVIATO - Primo controllo tra 1 second
                 });
               }
             } else {
-              console.log('âŒ Permesso notifiche negato');
+              console.log('❌ Permesso notifiche negato');
             }
           });
         } else {
           localStorage.setItem('notificationPermissionAsked', 'true');
-          console.log('âŒ Utente ha rifiutato le notifiche');
+          console.log('❌ Utente ha rifiutato le notifiche');
         }
       }
       // Timestamp installazione (Chrome/Android) - DISABILITATO (PWA non attiva)
       window.addEventListener('appinstalled', function() {
         try { 
           localStorage.setItem('installedAt', new Date().toISOString());
-         console.log('âœ… App installata, timestamp salvato');
+         console.log('✅ App installata, timestamp salvato');
         } catch(e) {
           console.error('Errore salvataggio timestamp:', e);
         }
@@ -2291,7 +2291,7 @@ console.log('ðŸš€ SISTEMA PROMOZIONI AVVIATO - Primo controllo tra 1 second
           btn.style.opacity = '1';
           btn.style.pointerEvents = 'auto';
         }
-        // Se l'utente Ã¨ giÃ  attivato e siamo su piattaforma nativa, registra/aggiorna subito il token FCM
+        // Se l'utente è già attivato e siamo su piattaforma nativa, registra/aggiorna subito il token FCM
         try {
           const code = localStorage.getItem('activationCode') || '';
           const phone = localStorage.getItem('activationPhone') || '';
@@ -2341,3 +2341,6 @@ console.log('ðŸš€ SISTEMA PROMOZIONI AVVIATO - Primo controllo tra 1 second
         })();
 
 // SW update periodico (forza aggiornamenti automatici)
+
+
+
