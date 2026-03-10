@@ -71,7 +71,7 @@ $current_folder = '/';
 if (isset($_POST['custom_path']) && !empty($_POST['custom_path'])) {
 $current_folder = $_POST['custom_path'];
 }
-$upload_dir = $base_path . $current_folder;
+$upload_dir = rtrim($base_path, '/') . '/' . ltrim($current_folder, '/');
 if (!is_dir($upload_dir)) {
 mkdir($upload_dir, 0755, true);
 }
@@ -204,7 +204,7 @@ button{cursor:pointer;border:none;border-radius:6px;padding:10px 16px;font-weigh
 <?php endforeach; ?>
 </select>
 <input type="text" id="customPathInput" name="custom_path" placeholder="/PRENOTAZIONI/nuova-cartella" value="<?php echo !in_array($current_folder, $folders) ? $current_folder : ''; ?>" style="display:none;">
-<div class="path">Path: <span id="pathValue"><?php echo $base_path . $current_folder; ?></span></div>
+<div class="path" style="font-size:20px; font-weight:bold; color:red;">Path: <span id="pathValue"><?php echo $base_path . $current_folder; ?></span></div>
 </div>
 <h1>Uploader VPS</h1>
 <?php if ($message): ?>
