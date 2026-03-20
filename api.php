@@ -24,9 +24,6 @@ try {
      CREATE TABLE IF NOT EXISTS appointments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     customer_name TEXT NOT NULL,
-    pet_name TEXT,
-    razza TEXT,
-    data_nascita TEXT,
     appointment_date TEXT NOT NULL,
     appointment_time TEXT NOT NULL,
     telefono TEXT,
@@ -55,50 +52,10 @@ try {
 )
     ");
 
-    // Campi push per messaggi (idempotente)
-
-
-    // Tabella messaggi (per inbox calendario)
-    $pdo->exec("
-     CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo TEXT,
-    nome_cliente TEXT,
-    telefono_cliente TEXT,
-    testo_messaggio TEXT,
-    stato TEXT DEFAULT 'da_leggere',
-    data_invio DATETIME DEFAULT CURRENT_TIMESTAMP,
-    cliente_id TEXT,
-    user_id TEXT
-)
-    ");
-
-      try {
-        $pdo->exec("ALTER TABLE appointments ADD COLUMN razza TEXT");
-    } catch(Exception $e) {}
-    
-    try {
-        $pdo->exec("ALTER TABLE appointments ADD COLUMN data_nascita TEXT");
-    } catch(Exception $e) {}
-try {
-    $pdo->exec("ALTER TABLE appointments ADD COLUMN app_id TEXT");
-} catch(Exception $e) {}
     try {
         $pdo->exec("ALTER TABLE appointments ADD COLUMN activation_code TEXT");
     } catch(Exception $e) {}
     
-    // Campi specifici per toilettatura
-    try {
-        $pdo->exec("ALTER TABLE appointments ADD COLUMN servizio TEXT");
-    } catch(Exception $e) {}
-    
-    try {
-        $pdo->exec("ALTER TABLE appointments ADD COLUMN taglia TEXT");
-    } catch(Exception $e) {}
-    
-    try {
-        $pdo->exec("ALTER TABLE appointments ADD COLUMN tipo_pelo TEXT");
-    } catch(Exception $e) {}
 } catch(PDOException $e) {
     echo json_encode([
         'success' => false,
@@ -112,10 +69,6 @@ try {
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_REQUEST['action'] ?? '';
 $agenda_id = $_REQUEST['agenda_id'] ?? null;
-
-$action = $_REQUEST['action'] ?? '';
-$agenda_id = $_REQUEST['agenda_id'] ?? null;
-
 
 // PING (test connessione)
 if ($action === 'ping' || $action === 'test') {
@@ -159,14 +112,10 @@ if ($method === 'GET') {
         
         $sql .= " ORDER BY appointment_date, appointment_time";
         
-        // file_put_contents($log_file, "GET SQL: $sql | agenda_id: " . ($agenda_id ?? 'NULL') . "\n", FILE_APPEND);
-        
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        // file_put_contents($log_file, "GET TROVATI: " . count($appointments) . " appuntamenti\n", FILE_APPEND);
-        
+
         // Converti nel formato che l'applicazione si aspetta (FullCalendar format)
         $formatted = [];
         foreach ($appointments as $appt) {
@@ -284,14 +233,11 @@ if ($method === 'POST') {
         // Inserisci
       $stmt = $pdo->prepare("
          INSERT INTO appointments 
-        (customer_name, pet_name, razza, data_nascita, appointment_date, appointment_time, telefono, activation_code, note, status, source, timestamp, agenda_id, app_id, servizio, taglia, tipo_pelo)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (customer_name, appointment_date, appointment_time, telefono, activation_code, note, status, source, timestamp, agenda_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
     $stmt->execute([
     $data['customer_name'] ?? $data['cliente'] ?? '',
-    $data['pet_name'] ?? $data['animale'] ?? '',
-    $data['razza'] ?? '',
-    $data['data_nascita'] ?? '',
     $data['appointment_date'],
     $data['appointment_time'],
     $data['telefono'] ?? '',
@@ -300,11 +246,7 @@ if ($method === 'POST') {
     'pending',
     $data['source'] ?? 'website_booking',
     $data['timestamp'] ?? date('Y-m-d H:i:s'),
-    $agenda_id,
-    $data['app_id'] ?? null,
-    $data['servizio'] ?? '',
-    $data['taglia'] ?? '',
-    $data['tipo_pelo'] ?? ''
+    $agenda_id
 ]);       
            
         $newId = $pdo->lastInsertId();
