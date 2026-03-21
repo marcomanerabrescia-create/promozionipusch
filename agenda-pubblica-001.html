@@ -1194,8 +1194,7 @@
                 aspect-ratio: 3 / 4;
             }
         }
-
-        .error-message.show {
+.error-message.show {
             display: block;
             animation: fadeIn 0.3s;
         }
@@ -1591,8 +1590,7 @@ if (!String.prototype.padStart) {
             </div>
         </div>
     </div>
-
-    <div class="container">
+<div class="container">
         <div class="vet-card">
     <div style="text-align: center; padding: 5px;">
         <img id="business-logo" src="https://consulenti.puschpromozioni.it/log7.png" alt="" style="display: block; margin: 0px auto 4px; height: 150px; width: 270px;">
@@ -1609,18 +1607,28 @@ if (!String.prototype.padStart) {
 
         <div id="calendar-wrapper">
             <div class="day-grid" id="calendar-container"></div>
+
         </div>
+
         
 
    
         
-        <button class="help-instructions-button" onclick="openInfoModal()">ISTRUZIONI UTILIZZO</button>
-        <div style="display:flex; gap:10px; width:100%; margin-top: 8px;">
-            <button style="flex:1; background:#000; color:#fff; border:none; padding:12px; border-radius:5px; cursor:pointer;">CHIUDI</button>
-            <button id="btnPromo" style="flex:1; background:#ffeb3b; color:#000; border:none; padding:12px; border-radius:5px; cursor:pointer;">PROMO</button>
+        <div style="position:relative;">
+          <button class="help-instructions-button" onclick="openInfoModal()">ISTRUZIONI UTILIZZO</button>
+          <div style="display:flex; gap:10px; width:100%; margin-top: 8px;">
+              <button style="flex:1; background:#000; color:#fff; border:none; padding:12px; border-radius:5px; cursor:pointer;">CHIUDI</button>
+              <button id="btnPromo" style="flex:1; background:#ffeb3b; color:#000; border:none; padding:12px; border-radius:5px; cursor:pointer;">PROMO</button>
+          </div>
+          <button class="send-documents-button" id="btnRegistrati">NEUTRO</button>
+          <button class="send-documents-button" id="btnInviaMessagio" style="background: #000;" onclick="openMessageModal()">INVIA MESSAGIO</button>
+          <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:#ffffff; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px; box-sizing:border-box;">
+            <a href="https://www.consulenticaniegatti.com/" target="_blank" style="display:block; font-size:15px; color:#2196f3; text-decoration:none; margin-top:8px; text-align:center;">← Torna al sito</a>
+            <p style="font-size:15px; font-weight:bold; color:#222; margin:0 0 8px;">Prenota la tua consulenza<br>Scegli il giorno e l'orario che preferisci.</p>
+            <p style="font-size:11px; color:#666; margin:0; line-height:1.5;">L'applicazione è utile per te: al suo interno trovi un'agenda vocale gratuita e prossimamente applicazioni gratuite per il tuo cane o gatto.</p>
+          </div>
+
         </div>
-        <button class="send-documents-button" id="btnRegistrati">NEUTRO</button>
-        <button class="send-documents-button" id="btnInviaMessagio" style="background: #000;" onclick="openMessageModal()">INVIA MESSAGGIO</button>
     </div>
 
     <!-- Modale invio messaggio -->
